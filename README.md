@@ -1,4 +1,4 @@
-
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/a-n-rose/Build-Your-Own-Audio-Processing-Package-Using-Poetry/HEAD?labpath=notebooks%2Fpart1_audio.ipynb)
 
 # Build your own audio processing package using Poetry
 
