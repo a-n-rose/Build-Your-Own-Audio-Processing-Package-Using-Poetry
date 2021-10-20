@@ -156,6 +156,8 @@ pyladies_acoustics$ poetry run jupyter lab
 ```
 ## 7. Inside Jupyter Lab:
 
+To view how I import the package in a jupyter notebook, you can view it here: [link to example jupyter lab environment](https://github.com/a-n-rose/Build-Your-Own-Audio-Processing-Package-Using-Poetry/blob/main/pyladies_acoustics/notebooks/example_package_functionality.ipynb). The path to this file is `pyladies_acoustics/notebooks/example_package_functionality.ipynb`.
+
 Import your package and other dependencies in the first cell:
 
 ```
