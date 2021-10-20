@@ -58,13 +58,15 @@ $ cd build-acoustics-package-with-poetry
 
 ## 2. Set up your new pacakge with Poetry
 
+Name your package whatever you would like. I have put together an example package called `pyladies_acoustics`.
+
 Type into your console:
 
 ```bash
 $ poetry new pyladies_acoustics
 ```
 
-If it works, you should get this output:
+If it works, you should get output like this:
 
 ```
 Created package pyladies_acoustics in pyladies_acoustics
@@ -158,13 +160,12 @@ Import your package and other dependencies in the first cell:
 
 ```
 import pyladies_acoustics as pa
-import scipy
-import numpy as np # was installed with scipy
+import matplotlib.pyplot as plt
 ```
 
 Any time you add functionality to your package, restart the kernel and rerun the cells; you will be able to use your updated pacakge!
 
-If you need more packages installed, all you have to do is type the folling in your bash:
+If you need more packages installed in your virtual environment, all you have to do is type the folling in your bash:
 
 ```bash
 pyladies_acoustics$ poetry add <package>
@@ -173,7 +174,95 @@ pyladies_acoustics$ poetry update
 
 and restart your Jupyter Lab kernel.
 
-## 8. Ready to share your package?
+## 8. Create new module
+
+Create a new python file in the same directory as `pyladies_acoustics/pyladies_acoustics/__init__.py`. 
+
+As an example, I created `audio_fun.py`. This results in the following file structure: 
+
+```
+├── pyladies_acoustics                                                  
+│   ├── pyproject.toml                                      
+│   ├── README.rst                                  
+│   │   ├── pyladies_acoustics                                                                     
+│   │   │   ├── __init__.py          
+│   │   │   ├── audio_fun.py    
+│   │   ├── tests            
+│   │   │   │   ├── __init__.py             
+│   │   │   │   ├── test_pyladies_acoustics.py                  
+```
+
+It is in `audio_fun.py` that we add our functions. 
+
+I added the following code to `audio_fun.py`:
+
+```
+"""Module for audio functionality
+"""
+from scipy.io.wavfile import read
+
+def load_audio(pathway):
+    """Returns `samples` and `sampling_rate` of .wav `pathway`.
+    """
+    sampling_rate, samples = read(pathway)
+    return samples, sampling_rate
+ 
+def adjust_amplitude(samples, amount):
+    """Multiplies amplitude values in `samples` by `amount`.
+    """
+    samps = samples.copy()
+    samps = samps * amount
+    return samps
+```
+
+I then adjust `__init__.py` (in the same directory):
+
+```
+from . import audio_fun
+
+__all__ = ["audio_fun"]
+```
+
+This allows the module we have created to be accessed by our package. When we restart our jupyter lab kernel, we can use this new functionality! 
+
+## 9. Add basic tests
+
+Poetry already installs [pytest](https://docs.pytest.org/en/6.2.x/) in the virtual environment. 
+
+In the file `pyladies_acoustics/tests/test_pyladies_acoustics.py` I added a couple of tests:
+
+```
+from pyladies_acoustics import __version__
+import pyladies_acoustics as pa
+import numpy as np
+
+def test_version():
+    assert __version__ == '0.1.0'
+    
+def test_amplitude_doubled():
+    x = np.ones((5,))
+    y = pa.audio_fun.adjust_amplitude(
+        x,
+        2)
+    expected = np.array([2,2,2,2,2])
+    assert np.array_equal(y,expected)
+
+def test_amplitude_halved():
+    x = np.ones((5,))
+    y = pa.audio_fun.adjust_amplitude(
+        x,
+        0.5)
+    expected = np.array([0.5,0.5,0.5,0.5,0.5])
+    assert np.array_equal(y,expected)
+```
+
+To see if the new functionality works as expected, all I have to do is type the following in our bash terminal:
+
+```bash
+pyladies_acoustics$ poetry run pytest
+```
+
+## 10. Ready to share your package?
 
 When you are done with adding functionality and you want to share your package with your team, type into your bash:
 
@@ -181,4 +270,24 @@ When you are done with adding functionality and you want to share your package w
 pyladies_acoustics$ poetry build
 ```
 
-Then you can share the produced file `dist/<pacakge>.tar.gz` and others can install it via `pip install` or of course via `poetry add`. For an example, look in the local folder `soundpy`. I will install that package in the Part1 notebook, available to interact with via the `launch binder` button at the top of this page or to simply look at by navigating [here](https://gitlab.com/airose/build-acoustics-package-with-poetry/-/blob/main/notebooks/part1_audio.ipynb).
+The resulting file architecture:
+
+```
+├── pyladies_acoustics                                                  
+│   ├── pyproject.toml                                      
+│   ├── README.rst                                  
+│   │   ├── pyladies_acoustics                                                                     
+│   │   │   ├── __init__.py          
+│   │   │   ├── audio_fun.py    
+│   │   ├── tests            
+│   │   │   │   ├── __init__.py             
+│   │   │   │   ├── test_pyladies_acoustics.py
+│   │   ├── dist            
+│   │   │   │   ├── pyladies_acoustics-0.1.0-py3-none-any.whl             
+│   │   │   │   ├── pyladies_acoustics-0.1.0.tar.gz
+```
+
+
+You can share the produced file `dist/<pacakge>.tar.gz` and others can install it via `pip install` or of course via `poetry add`. 
+
+For an example, look in the local folder `soundpy`. I install that package in the Part1 notebook, available to interact with via the `launch binder` button at the top of this page or to simply look at by navigating [here](https://gitlab.com/airose/build-acoustics-package-with-poetry/-/blob/main/notebooks/part1_audio.ipynb).
