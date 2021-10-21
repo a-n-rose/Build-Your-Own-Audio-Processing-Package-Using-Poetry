@@ -87,7 +87,7 @@ This will create the following folder architecture:
 
 Great! 
 
-Poetry saves the dependencies we want in `pyproject.toml`. We indicate which dependencies we need for the package via `poetry add` and which dependencies we need for development via `poetry add -d`.
+Poetry saves the dependencies we want in `pyproject.toml`. We indicate which dependencies we need for the package via `poetry add` and which dependencies we need for development via `poetry add -D`.
 
 ## 3. Add basic dependencies
 
